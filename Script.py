@@ -7,6 +7,8 @@ from scipy.stats import linregress
 tavgdict = dict()
 
 # function to read the CSV file and process the data.
+
+
 def load_data(file_path):
     temperatureCSV = pd.read_csv(file_path)
     temperatureCSV['TAVG'] = pd.to_numeric(
@@ -63,8 +65,7 @@ def update_tavgdict(data):
         'Sum': calculate_sum(data['TAVG']),
         'Average': calculate_average(data['TAVG']),
         'Median': calculate_median(data['TAVG']),
-        'standev': calculate_std_dev(
-            data['TAVG']),
+        'standev': calculate_std_dev(data['TAVG']),
         'variance': calculate_variance(data['TAVG']),
         'skewness': calculate_skewness(data['TAVG']),
         'kurtosis': calculate_kurtosis(data['TAVG']),
@@ -87,6 +88,7 @@ def parse_arguments():
         help="Choose a statistic to calculate."
     )
     return parser.parse_args()
+
 
 # script execution
 def main(file_path):
