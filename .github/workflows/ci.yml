@@ -44,7 +44,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest  # Install pytest for testing
-          pip install pandas  # Install pandas for test dependencies
+          pip install pandas scipy  # Install pandas and scipy for test dependencies
 
       - name: Run tests
         run: |
