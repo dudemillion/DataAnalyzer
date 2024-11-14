@@ -10,8 +10,9 @@ tavgdict = {}
 # function to read the CSV file and process the data
 def load_data(file_path):
     temperature_csv = pd.read_csv(file_path)
-    temperature_csv['TAVG'] = pd.to_numeric(temperature_csv['TAVG'],
-        errors='coerce')
+    temperature_csv['TAVG'] = pd.to_numeric(
+        temperature_csv['TAVG'], errors='coerce'
+        )
     return temperature_csv
 
 
