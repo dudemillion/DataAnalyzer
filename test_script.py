@@ -1,6 +1,6 @@
 import pandas as pd
-from Script import (calculate_sum, calculate_average, 
-                    calculate_median, calculate_std_dev, calculate_linear_trend)
+from Script import (calculate_sum, calculate_average, calculate_median,
+                    calculate_std_dev, calculate_linear_trend)
 
 
 # Sample data for testing
