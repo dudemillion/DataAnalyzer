@@ -1,97 +1,100 @@
-# Getting a module to read CSV files, statistics to find median, linregress
-# for linear trend, and argparse to make CLI.
-import pandas
+import pandas as pd
 import statistics
-from scipy.stats import linregress
 import argparse
+from scipy.stats import linregress
 
-# Presetting empty dictionaries for later.
+# presetting empty dictionaries for later.
 tavgdict = dict()
 
-# Setting options to make sure every row and column displays.
-pandas.set_option('display.max_rows', None)
-pandas.set_option('display.max_columns', None)
+# function to read the CSV file and process the data.
+def load_data(file_path):
+    temperatureCSV = pd.read_csv(file_path)
+    temperatureCSV['TAVG'] = pd.to_numeric(temperatureCSV['TAVG'], errors='coerce')
+    return temperatureCSV
 
-# All data for each station, date, temp avg, temp max, and temp min are in
-# this CSV. Storing it in the variable 'temperatureCSV'.
-temperatureCSV = pandas.read_csv(
-    r'C:\Users\Nick\Documents\Python Scripts\Competition Folder\3842963.csv'
-)
+# function to calculate sum
+def calculate_sum(data):
+    return data.sum()
 
-# Setting each value in TAVG to a separate number.
-temperatureCSV['TAVG'] = pandas.to_numeric(
-    temperatureCSV['TAVG'], errors='coerce'
-)
+# function to calculate average
+def calculate_average(data):
+    return round(data.sum() / len(data.dropna()), 2)
 
-# Adding a value to the tavgdict dictionary which makes the key value "sum"
-# and the value the sum of all the values of the tavg dictionary.
-tavgsum = temperatureCSV['TAVG'].sum()
-tavgdict.update({'Sum': tavgsum})
+# function to calculate median
+def calculate_median(data):
+    return statistics.median(data.dropna())
 
-# Averaging it, and rounding to the nearest hundredth with the dropna at the
-# end to make sure there are no NaN values.
-average = round(
-    tavgsum / len(temperatureCSV['TAVG'].dropna()), 2
-)
-# Adding it to the dictionary
-tavgdict.update({'Average': average})
+# function to calculate standard deviation
+def calculate_std_dev(data):
+    return round(data.std(), 2)
 
-# Finding the median using statistic's median, and dropna to remove and NaN
-# values.
-median = statistics.median(temperatureCSV['TAVG'].dropna())
-tavgdict.update({'Median': median})
+# function to calculate variance
+def calculate_variance(data):
+    return round(data.var(), 2)
 
-# Finding standard deviation and rounding it to the nearest hundredth.
-std_dev = round(temperatureCSV['TAVG'].std(), 2)
-tavgdict.update({'standev': std_dev})
+# function to calculate skewness
+def calculate_skewness(data):
+    return round(data.skew(), 2)
 
-# Finding variance and rounding it to the nearest hundredth.
-variance = round(temperatureCSV['TAVG'].var(), 2)
-tavgdict.update({'variance': variance})
+# function to calculate kurtosis
+def calculate_kurtosis(data):
+    return round(data.kurt(), 2)
 
-# Finding skewness and rounding it to the nearest hundredth.
-skewness = round(temperatureCSV['TAVG'].skew(), 2)
-tavgdict.update({'skewness': skewness})
+# Function to calculate linear trend (slope)
+def calculate_linear_trend(data):
+    x = range(len(data.dropna()))
+    y = data.dropna()
+    slope = linregress(x, y)
+    return round(slope, 2)
 
-# Finding Kurtosis and rounding it to the nearest hundredth.
-kurtosis = round(temperatureCSV['TAVG'].kurt(), 2)
-tavgdict.update({'kurtosis': kurtosis})
+# tavgdict values
+def update_tavgdict(data):
+    tavgdict.update({
+        'Sum': calculate_sum(data['TAVG']),
+        'Average': calculate_average(data['TAVG']),
+        'Median': calculate_median(data['TAVG']),
+        'standev': calculate_std_dev(data['TAVG']),
+        'variance': calculate_variance(data['TAVG']),
+        'skewness': calculate_skewness(data['TAVG']),
+        'kurtosis': calculate_kurtosis(data['TAVG']),
+        'linear trend': calculate_linear_trend(data['TAVG'])
+    })
 
-# Finding Linear Trend
-x = range(len(temperatureCSV['TAVG'].dropna()))
-y = temperatureCSV['TAVG'].dropna()
-slope, intercept, r_value, p_value, std_err = linregress(x, y)
-tavgdict.update({'linear trend': round(slope, 2)})
+# parser for CLI.
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        prog='Data Analyzer', description='Calculates statistics for temperature.'
+    )
+    parser.add_argument(
+        '--calc',
+        choices=[
+            'sum', 'average', 'median', 'standev', 'variance',
+            'skewness', 'kurtosis', 'linear_trend'
+        ],
+        required=True,
+        help="Choose a statistic to calculate."
+    )
+    return parser.parse_args()
 
-# Setting up argument parser for CLI.
-parser = argparse.ArgumentParser(
-    prog='Data Analyzer', description='Calculates statistics for temperature.'
-)
-parser.add_argument(
-    '--calc',
-    choices=[
-        'sum', 'average', 'median', 'standev', 'variance',
-        'skewness', 'kurtosis', 'linear_trend'
-    ],
-    required=True,
-    help="Choose a statistic to calculate."
-)
-args = parser.parse_args()
+# script execution
+def main(file_path):
+    data = load_data(file_path)
+    update_tavgdict(data)
+    args = parse_arguments()
 
-# Output based on user choice
-if args.calc == 'sum':
-    print(tavgdict.get('Sum'))
-elif args.calc == 'average':
-    print(tavgdict.get('Average'))
-elif args.calc == 'median':
-    print(tavgdict.get('Median'))
-elif args.calc == "standev":
-    print(tavgdict.get('standev'))
-elif args.calc == "variance":
-    print(tavgdict.get('variance'))
-elif args.calc == "skewness":
-    print(tavgdict.get('skewness'))
-elif args.calc == "kurtosis":
-    print(tavgdict.get('kurtosis'))
-elif args.calc == "linear_trend":
-    print(tavgdict.get('linear trend'))
+    if args.calc == 'sum':
+        print(tavgdict.get('Sum'))
+    elif args.calc == 'average':
+        print(tavgdict.get('Average'))
+    elif args.calc == 'median':
+        print(tavgdict.get('Median'))
+    elif args.calc == "standev":
+        print(tavgdict.get('standev'))
+    elif args.calc == "variance":
+        print(tavgdict.get('variance'))
+    elif args.calc == "skewness":
+        print(tavgdict.get('skewness'))
+    elif args.calc == "kurtosis":
+        print(tavgdict.get('kurtosis'))
+    elif args.calc == "linear_trend":
+        print(tavgdict.get('linear trend'))
