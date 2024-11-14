@@ -1,7 +1,4 @@
-import pytest
 import pandas as pd
-import sys
-import os
 from Script import calculate_sum, calculate_average, calculate_median, calculate_std_dev, calculate_linear_trend
 
 # Sample data for testing
