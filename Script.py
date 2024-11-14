@@ -1,4 +1,4 @@
-# Getting a module to read CSV files, statistics to find median, linregress 
+# Getting a module to read CSV files, statistics to find median, linregress
 # for linear trend, and argparse to make CLI.
 import pandas
 import statistics
@@ -12,7 +12,7 @@ tavgdict = dict()
 pandas.set_option('display.max_rows', None)
 pandas.set_option('display.max_columns', None)
 
-# All data for each station, date, temp avg, temp max, and temp min are in 
+# All data for each station, date, temp avg, temp max, and temp min are in
 # this CSV. Storing it in the variable 'temperatureCSV'.
 temperatureCSV = pandas.read_csv(
     r'C:\Users\Nick\Documents\Python Scripts\Competition Folder\3842963.csv'
@@ -23,20 +23,20 @@ temperatureCSV['TAVG'] = pandas.to_numeric(
     temperatureCSV['TAVG'], errors='coerce'
 )
 
-# Adding a value to the tavgdict dictionary which makes the key value "sum" 
+# Adding a value to the tavgdict dictionary which makes the key value "sum"
 # and the value the sum of all the values of the tavg dictionary.
 tavgsum = temperatureCSV['TAVG'].sum()
 tavgdict.update({'Sum': tavgsum})
 
-# Averaging it, and rounding to the nearest hundredth with the dropna at the 
-# end to make sure there are no NaN values. 
+# Averaging it, and rounding to the nearest hundredth with the dropna at the
+# end to make sure there are no NaN values.
 average = round(
     tavgsum / len(temperatureCSV['TAVG'].dropna()), 2
 )
 # Adding it to the dictionary
 tavgdict.update({'Average': average})
 
-# Finding the median using statistic's median, and dropna to remove and NaN 
+# Finding the median using statistic's median, and dropna to remove and NaN
 # values.
 median = statistics.median(temperatureCSV['TAVG'].dropna())
 tavgdict.update({'Median': median})
@@ -58,7 +58,7 @@ kurtosis = round(temperatureCSV['TAVG'].kurt(), 2)
 tavgdict.update({'kurtosis': kurtosis})
 
 # Finding Linear Trend
-x = range(len(temperatureCSV['TAVG'].dropna()))  
+x = range(len(temperatureCSV['TAVG'].dropna()))
 y = temperatureCSV['TAVG'].dropna()
 slope, intercept, r_value, p_value, std_err = linregress(x, y)
 tavgdict.update({'linear trend': round(slope, 2)})
@@ -68,12 +68,12 @@ parser = argparse.ArgumentParser(
     prog='Data Analyzer', description='Calculates statistics for temperature.'
 )
 parser.add_argument(
-    '--calc', 
+    '--calc',
     choices=[
-        'sum', 'average', 'median', 'standev', 'variance', 
+        'sum', 'average', 'median', 'standev', 'variance',
         'skewness', 'kurtosis', 'linear_trend'
-    ], 
-    required=True, 
+    ],
+    required=True,
     help="Choose a statistic to calculate."
 )
 args = parser.parse_args()
