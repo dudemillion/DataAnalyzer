@@ -76,7 +76,7 @@ def update_tavgdict(data):
 # parser for CLI.
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        prog='Data Analyzer', 
+        prog='Data Analyzer',
         description='Calculates statistics for temperature.'
     )
     parser.add_argument(
