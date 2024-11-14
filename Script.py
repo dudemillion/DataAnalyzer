@@ -3,17 +3,15 @@ import statistics
 import argparse
 from scipy.stats import linregress
 
-# presetting empty dictionaries for later.
-tavgdict = dict()
-
-# function to read the CSV file and process the data.
+# presetting empty dictionaries for later
+tavgdict = {}
 
 
+# function to read the CSV file and process the data
 def load_data(file_path):
-    temperatureCSV = pd.read_csv(file_path)
-    temperatureCSV['TAVG'] = pd.to_numeric(
-        temperatureCSV['TAVG'], errors='coerce')
-    return temperatureCSV
+    temperature_csv = pd.read_csv(file_path)
+    temperature_csv['TAVG'] = pd.to_numeric(temperature_csv['TAVG'], errors='coerce')
+    return temperature_csv
 
 
 # function to calculate sum
@@ -51,16 +49,16 @@ def calculate_kurtosis(data):
     return round(data.kurt(), 2)
 
 
-# Function to calculate linear trend (slope)
+# function to calculate linear trend (slope)
 def calculate_linear_trend(data):
     x = range(len(data.dropna()))
     y = data.dropna()
     result = linregress(x, y)
-    slope = result.slope  # Get the slope from the result
+    slope = result.slope
     return round(slope, 2)
 
 
-# tavgdict values
+# update tavgdict values
 def update_tavgdict(data):
     tavgdict.update({
         'Sum': calculate_sum(data['TAVG']),
@@ -74,7 +72,7 @@ def update_tavgdict(data):
     })
 
 
-# parser for CLI.
+# parser for CLI
 def parse_arguments():
     parser = argparse.ArgumentParser(
         prog='Data Analyzer',
@@ -87,30 +85,37 @@ def parse_arguments():
             'skewness', 'kurtosis', 'linear_trend'
         ],
         required=True,
-        help="Choose a statistic to calculate."
+        help='Choose a statistic to calculate.'
     )
     return parser.parse_args()
 
 
 # script execution
-def main(file_path):
+def main():
+    args = parse_arguments()
+    file_path = r'C:\Users\Nick\Documents\Python Scripts\Competition Folder\3842963.csv'
     data = load_data(file_path)
     update_tavgdict(data)
-    args = parse_arguments()
 
+    # Print the results based on the argument passed
     if args.calc == 'sum':
         print(tavgdict.get('Sum'))
     elif args.calc == 'average':
         print(tavgdict.get('Average'))
     elif args.calc == 'median':
         print(tavgdict.get('Median'))
-    elif args.calc == "standev":
+    elif args.calc == 'standev':
         print(tavgdict.get('standev'))
-    elif args.calc == "variance":
+    elif args.calc == 'variance':
         print(tavgdict.get('variance'))
-    elif args.calc == "skewness":
+    elif args.calc == 'skewness':
         print(tavgdict.get('skewness'))
-    elif args.calc == "kurtosis":
+    elif args.calc == 'kurtosis':
         print(tavgdict.get('kurtosis'))
-    elif args.calc == "linear_trend":
+    elif args.calc == 'linear_trend':
         print(tavgdict.get('linear trend'))
+
+
+# Ensure the script runs when executed directly
+if __name__ == "__main__":
+    main()
