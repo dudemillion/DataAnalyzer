@@ -96,7 +96,7 @@ def parse_arguments():
 def main():
     args = parse_arguments()
     file_path = (
-        r'C:\Users\Nick\Documents\Python Scripts\Competition Folder\3842963.csv'
+        r'C:\Users\Nick\Documents\Python Scripts\TaskFolder\3842963.csv'
         )
     data = load_data(file_path)
     update_tavgdict(data)
