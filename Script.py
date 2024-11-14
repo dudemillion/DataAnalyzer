@@ -55,7 +55,8 @@ def calculate_kurtosis(data):
 def calculate_linear_trend(data):
     x = range(len(data.dropna()))
     y = data.dropna()
-    slope = linregress(x, y)
+    result = linregress(x, y)
+    slope = result.slope  # Get the slope from the result
     return round(slope, 2)
 
 
